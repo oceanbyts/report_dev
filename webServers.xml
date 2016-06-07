@@ -1,0 +1,22 @@
+<application>
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="da170a1a-82e0-4ea7-a7f0-ec27d598de58" name="report_sf" url="http://symfony.mytest.com/">
+        <fileTransfer host="192.168.7.200" port="3700" rootFolder="/var/www/report_sf" accessType="SFTP" password="dfd8dfcfdfdadfc5dfd8dfde" username="report">
+          <advancedOptions>
+            <advancedOptions controlEncoding="utf8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="3700" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="a6d03ebd-16be-4738-bdb9-7be66711d9c4" name="report_dev" url="http://dev.mytest.com">
+        <fileTransfer host="192.168.7.200" port="3700" accessType="SFTP" password="dfd8dfcfdfdadfc5dfd8dfde" username="report">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="3700" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</application>
