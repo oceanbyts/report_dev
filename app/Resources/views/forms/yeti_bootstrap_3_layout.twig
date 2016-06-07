@@ -1,0 +1,125 @@
+{% use  'bootstrap_3_layout.html.twig' %}
+
+{# Принудительно выстраивает элементы button в один тэг div #}
+{% block button_row %}
+    {% spaceless %}
+        {% if 'first' in attr %}
+            {% set where = attr.where|default('left') %}
+            <div class="form-group" style="text-align: {{ where }};">
+        {% endif %}
+        {{ form_widget(form) }}
+        {% if 'last' in attr %}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock button_row %}
+
+{# Удаляем наши атрибуты кнопок, чтобы они не отображались в HTML #}
+{% block button_attributes %}
+    {% spaceless %}
+        id="{{ id }}" name="{{ full_name }}"
+        {% if disabled %} disabled="disabled"{% endif %}
+        {% for attrname, attrvalue in attr %}
+            {% if (attrvalue not in ['first','last']) and (attrname not in ['where']) %}
+                {{ attrname }}="{{ attrvalue }}"
+            {%endif%}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock button_attributes %}
+
+{# Определяем класс по-умолчанию для кнопок типа submit #}
+{% block button_widget -%}
+    {# Если тип не определён или тип НЕ соответвует submit, то устанавливаем класс по-умолчанию #}
+    {% if type is not defined or type not in ['submit'] %}
+        {% set attr = attr|merge({class: ('btn-default ' ~ attr.class|default(''))|trim}) %}
+    {% else %}
+        {# Иначе определяем, что кнопка отправки всегда должна иметь стиль "btn-primary" #}
+        {% set attr = attr|merge({class: ('btn-primary ' ~ attr.class|default(''))|trim}) %}
+    {% endif %}
+    {{- parent() -}}
+{%- endblock %}
+
+{# Если поле для ввода пароля, то добавлем к нему глиф с ключом #}
+{% block password_widget %}
+    {% spaceless %}
+        {% set type = type|default('password') %}
+        {% set attr = attr|merge({class: ('form-control ' ~ attr.class|default(''))|trim}) %}
+        <div class="input-group margin-bottom-sm">
+            <span class="input-group-addon">
+                <i class="fa fa-key" aria-hidden="true"></i>
+            </span>
+            <input type='{{ type }}' {{ block('widget_attributes') }} {% if value is not empty %}value='{{ value }}' {% endif %}/>
+        </div>
+    {% endspaceless %}
+{% endblock password_widget %}
+{#
+# Отображение bootstrap_panel
+# НАЧАЛО
+#}
+{% block panel_label %}
+    {% spaceless %}
+        {%- if show_label -%}
+            {{- name -}}
+        {%- endif -%}
+    {% endspaceless %}
+{% endblock panel_label %}
+
+{% block panel_widget %}
+    {% spaceless %}
+        {% if attr.class is defined and attr.class in ['panel','panel-default','panel-primary'] %}
+            To Do something
+        {% endif %}
+
+        {% set attr = attr|merge({class: ('panel panel-' ~ type ~ ' ' ~ attr.class|default(''))|trim}) %}
+        <div {{ block('widget_container_attributes') }}>
+            {%- if title  -%}
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{- title -}}
+                    </h3>
+                </div>
+            {%- endif -%}
+            <div class="panel-body">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock panel_widget %}
+{#
+# Отображение bootstrap_panel
+# ОКОНЧАНИЕ
+#}
+
+{#
+# Отображение bootstrap_tabs
+# НАЧАЛО
+#}
+{% block tabs_widget %}
+    {% spaceless %}
+        <ul class="nav nav-tabs"  data-tabs="tabs">
+            {% for tab in form.children %}
+                <li {% if tab.vars.attr.active %} class="active"{% endif %}><a data-toggle="tab" href="#{{ tab.vars.name }}">{{ tab.vars.label }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content panel-body">
+            {#
+             # Перебираем все вкладки
+             # Добавляем элементы в тэг с id вкладки
+             #}
+            {% for tab in form.children %}
+                <div id="{{ tab.vars.name }}" class="tab-pane fade{% if tab.vars.attr.active %} in active{% endif %}">
+                    {{- form_widget(tab) -}}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock tabs_widget %}
+
+{% block tabs_label %}
+    {% spaceless %}
+    {% endspaceless %}
+{% endblock tabs_label %}
+{#
+# Отображение bootstrap_tabs
+# ОКОНЧАНИЕ
+#}

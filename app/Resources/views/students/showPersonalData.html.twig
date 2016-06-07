@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% if form is defined %}
+    {% form_theme form 'bootstrap_3_layout.twig' %}
+{%  endif %}
+{% block stylesheets %}
+    {{- parent() -}}
+{% endblock stylesheets %}
+{% block title %}New title{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="bs-docs-section">
+            <div class="row">
+                <h1>Данные студента</h1>
+                <div class="col-lg-5 col-md-4 col-sm-3">
+                    {{ id }}
+                </div>
+                <div class="col-lg-5 col-md-4 col-sm-3">
+                </div>
+                <div class="col-lg-5 col-md-4 col-sm-3">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{- parent() -}}
+{% endblock %}
