@@ -1,0 +1,45 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        {# Создание меню #}
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('homepage') }}">
+                {#
+                {% set array = {ROLE_ADMIN:'Админ', ROLE_LAW:'Юрист', ROLE_USER:'Пользователь', ROLE_TEMP:'Временный', ROLE_DEAN:'Деканат'} %}
+                {% for role in app.user.roles %}
+                    {{ array[role] }}
+                {% endfor %}
+                #}
+            </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class={{ app.request.pathinfo == path('homepage') ? 'active' }}><a href="{{ path('homepage') }}">Главная</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_EDU') %}
+                        <li class={{ app.request.pathinfo == path('edu') ? 'active' }}><a href="{{ path('edu') }}">Обучение СЭД</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_LAW') %}
+                        
+                        <li class={{ app.request.pathinfo == path('mother_capital') ? 'active' }}><a href="{{ path('mother_capital') }}">Материнский капитал</a></li>
+                        <li class={{ app.request.pathinfo == path('change_payer') ? 'active' }}><a href="{{ path('change_payer') }}">Смена плательщика</a></li>					
+                {% endif %}
+				{% if is_granted('ROLE_TEMP') %}
+                     	<li class={{ app.request.pathinfo == path('contract_for_training') ? 'active' }}><a href="{{ path('contract_for_training') }}">Договор на обучение</a></li>
+                {% endif %}
+				{% if is_granted('ROLE_DEAN') %}
+                     	<li class={{ app.request.pathinfo == path('getPersonalCard') ? 'active' }}><a href="{{ path('getPersonalCard') }}">Личная карточка студента</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                    <li><a href="">Выйти<i class="fa fa-sign-out  fa-fw"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

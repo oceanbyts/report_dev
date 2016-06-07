@@ -1,0 +1,123 @@
+{# app/Resources/views/srv/show.html.twig #}
+{% extends 'base.html.twig' %}
+{% form_theme form 'forms/yeti_bootstrap_3_layout.twig' %}
+{# Как настраивать стиль см. по ссылке https://bootswatch.com/yeti/ #}
+{% block stylesheets %}
+    {{- parent() -}}
+    {#<link rel="stylesheet" href="{{ asset('vendor/bootstrapValidator/css/bootstrapValidator.min.css') }}">#}
+    <link rel="stylesheet" href="{{ asset('vendor/dataTables/DataTables-1.10.12/css/dataTables.bootstrap.min.css') }}">
+    {#<link rel="stylesheet" href="{{ asset('vendor/dataTables/DataTables-1.10.12/css/jquery.dataTables.min.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('vendor/dataTables/Responsive-2.1.0/css/responsive.bootstrap.min.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('vendor/dataTables/Select-1.2.0/css/select.bootstrap.min.css') }}">#}
+{% endblock stylesheets %}
+{% block body %}
+    <div class="container">
+        <div class="bs-docs-section">
+
+                    <div class=" jumbotron">
+                        <h1>Поиск студента</h1>
+                    </div>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-3">
+                    {#
+                     # value, attr, form
+                     # id, name, full_name, disabled, label, label_format
+                     # multipart, block_prefixes, unique_block_prefix
+                     # translation_domain, cache_key, errors, valid, data
+                     # required, size, label_attr, compound, method, action, submitted
+                     #}
+                    {{ form_start(form ) }}
+                        {#{{ form_label(form) }}#}
+                        {{ form_widget(form) }}
+                        {{ form_errors(form) }}
+                    {{ form_end(form) }}
+                </div>
+                <div class="col-lg-7 col-md-6 col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Результаты поиска</div>
+                        <table id="students" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th>Номер зачётной книжки</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Группа</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Номер зачётной книжки</th>
+                                <th>Фамилия</th>
+                                <th>Имя</th>
+                                <th>Отчество</th>
+                                <th>Группа</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+    <script type="text/javascript" src="{{ asset('vendor/dataTables/datatables.min.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/DataTables-1.10.12/js/dataTables.bootstrap.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/Buttons-1.2.1/js/buttons.colVis.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/Buttons-1.2.1/js/buttons.print.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/Responsive-2.1.0/js/dataTables.responsive.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/Responsive-2.1.0/js/responsive.bootstrap.min.js') }}"></script>#}
+    {#<script type="text/javascript" src="{{ asset('vendor/dataTables/Select-1.2.0/js/dataTables.select.min.js') }}"></script>#}
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $('#{{ form.send.vars.id }}').on('click', function () {
+
+            event.preventDefault(); {# Запрещаем автоматическую отправку формы оп нажатию на клавишу типа submit #}
+//        $tbl = $('#students').DataTable();
+
+            $('#students').DataTable({
+                "destroy": true, {# Очищаем таблицу перед запросом #}
+                "pageLength": 20, {# параметр передаётся на сервер, для определения количества запрашиваемых строк #}
+                "iDisplayLength": 10,
+                "searching": false, {# Убирает строку для поиска записи в таблице #}
+                "lengthChange": false, {# Убирает опцию настройки "Количество строк на страницу" #}
+                "info": false, {# Убирает надпись о том сколько записей отображено из всего найденных #}
+                "language": {
+                    "url": '{{ asset('vendor/dataTables/ru_RU.json') }}' // файл с переводом подписей
+                },
+                "processing": true, {# Показывать информацию о том. что идёт обработка #}
+                "serverSide": false, {# Указывает, что данные забираются с сервера #}
+                "ajax": {
+                    {#"url": "{{ path("find_students_by_Server") }}", #}
+                    "url": "{{ path("find_students_by_Client") }}",
+                    "type": "POST",
+                    "data": { {# Отправляя запрос, передаём данные из полей формы #}
+                        "id": $('#{{ form.std_ID.vars.id }}').val(),
+                        "sname": $('#{{ form.std_SName.vars.id }}').val(),
+                        "fname": $('#{{ form.std_FName.vars.id }}').val(),
+                        "pname": $('#{{ form.std_PName.vars.id }}').val(),
+                        "grp": $('#{{ form.std_Group.vars.id }}').val()
+                    }
+                },
+                "columns": [ {# Определяем наименования полей. Такие же имена должны быть в ответе от сервера #}
+                    {"data": "id"},
+                    {"data": "sname"},
+                    {"data": "fname"},
+                    {"data": "pname"},
+                    {"data": "grp"}
+                ]
+            });
+        });
+
+        $('#students').on('click','tr',function () {
+            alert('You did it');
+//            var id=$(this).prop('id');
+            window.location.href ="{{ path('get_students_data', {'id': "'$(this).prop('id')'" }) }}";
+        } );
+    });
+    </script>
+{% endblock %}

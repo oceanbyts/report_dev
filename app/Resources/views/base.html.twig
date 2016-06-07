@@ -1,0 +1,44 @@
+{#{% form_theme form 'bootstrap_3_layout.html.twig' %}#}
+{#{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}#}
+{#{% form_theme form with ['forms/yeti_bootstrap_3_layout.twig', 'bootstrap_3_layout.html.twig'] %}#}
+{#{%  form_theme form.child ':forms:yeti_bootstrap_3_layout.twig' %}#}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0"/>
+        {#<meta name="MobileOptimized" content="320"/>
+        <meta name="HandheldFriendly" content="true"/>#}
+        <meta http-equiv=”X-UA-Compatible” content=”IE=edge”>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            {# Как настраивать стиль см. по ссылке https://bootswatch.com/yeti/ #}
+            <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/font-awesome.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('vendor/own/css/bootstrap_correct.css') }}">
+            <link rel="stylesheet" href="{{ asset('vendor/own/css/tips.css') }}">
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('icons/logo.ico') }}" />
+    </head>
+    <body>
+        {# Место для общего заголовка #}
+        {% block header %}
+            {% embed "header_base.html.twig" %}{% endembed %}
+        {% endblock %}
+        {# Место для тела страницы#}
+        {% block body %}{% endblock %}
+        {# Место для общего подвала #}
+        {% block footer %}
+            {% embed "footer_base.html.twig" %}{% endembed %}
+        {% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('vendor/jquery/jquery-2.2.4.min.js') }}"></script>
+            <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>
